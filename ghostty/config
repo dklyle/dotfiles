@@ -1,0 +1,33 @@
+# ghostty +show-config --default --docs > ~/ghostty-default-config
+background = 000000
+foreground = FDF5E6
+window-decoration = false
+keybind = ctrl+alt+w=toggle_window_decorations
+
+# ghostty +list-themes
+#theme = railscast
+#theme = "Firefly Traditional"
+#theme = "Tomorrow Night Bright"
+#theme = "IR_Black"
+#theme = "Mathias"
+#theme = "Monokai Remastered"
+#theme = "PaulMillr"
+#theme = "Seti"
+#theme = "Wez"
+#theme = "Elementary"
+#theme = "Builtin Tango Dark"
+theme = "tango-dark-custom"
+
+# ghostty +list-fonts
+font-family = "DejaVu Sans Mono"
+font-size = 10
+
+keybind = ctrl+alt+l=reload_config
+keybind = ctrl+alt+i=inspector:toggle
+
+# https://github.com/m-ahdal/ghostty-shaders
+#custom-shader = shaders/just-snow.glsl
+#custom-shader = shaders/underwater.glsl
+#custom-shader = shaders/animated-gradient-shader.glsl
+
+command = /usr/bin/bash -c "tmux attach || tmux"

@@ -1,0 +1,15 @@
+format = """
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+${custom.k8s}\
+$cmd_duration\
+$character"""
+
+[kubernetes]
+disabled = true
+
+[custom.k8s]
+command = """ echo -n "☸ $(echo $KUBECONFIG | awk -F/ '{print $5}' | cut -c 8-)" """
+when = """ [[ -n "$KUBECONFIG" ]] """
