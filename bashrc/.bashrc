@@ -54,15 +54,22 @@ title() {
 }
 
 k8s() {
-    export KUBECONFIG=/home/dlyle/.kube/config.$1
-    title "$(echo $KUBECONFIG | awk -F/ '{print $5}' | cut -c 8-)"
+    if [ -f /home/dlyle/.kube/config.$1 ]; then
+        export KUBECONFIG=/home/dlyle/.kube/config.$1
+        title "$(echo $KUBECONFIG | awk -F/ '{print $5}' | cut -c 8-)"
+    else
+        echo "No kubeconfig found for $1"
+    fi
 }
 
 lk8s() {
-    for d in $(ls /home/dlyle/.kube/config.*)
-    do
-        $d | awk -F/ '{print $5}' | cut -c 8-
-    done
+    # list prompt source is
+    # https://github.com/timo-reymann/bash-tui-toolkit/releases/download/1.9.0/prompts.bash
+    source ~/.prompts.bash
+    options=($(ls /home/dlyle/.kube/config.* | awk -F/ '{print $5}' | cut -c 8-))
+    option=$(list "k8s" "${options[@]}")
+    k8s ${options[$option]}
+    k8s ${options[$option]}
 }
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -81,21 +88,21 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-get_kube_prompt() {
-    if [ -z ${KUBECONFIG+x} ]; then
-        $(echo "")
-    else
-        echo "$(echo $KUBECONFIG | awk -F/ '{print $5}' | cut -c 8-):"
-    fi
-}
+#get_kube_prompt() {
+#    if [ -z ${KUBECONFIG+x} ]; then
+#        $(echo "")
+#    else
+#        echo "$(echo $KUBECONFIG | awk -F/ '{print $5}' | cut -c 8-):"
+#    fi
+#}
 
-PROMPT_COMMAND=PS1_CMD='$(get_kube_prompt)'
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;33m\]$PS1_CMD\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:$PS1_CMD\w\$ '
-fi
-unset color_prompt force_color_prompt
+#PROMPT_COMMAND=PS1_CMD='$(get_kube_prompt)'
+#if [ "$color_prompt" = yes ]; then
+#    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;33m\]$PS1_CMD\[\033[01;34m\]\w\[\033[00m\]\$ '
+#else
+#    PS1='${debian_chroot:+($debian_chroot)}\u@\h:$PS1_CMD\w\$ '
+#fi
+#unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
