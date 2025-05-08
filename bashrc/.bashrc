@@ -66,10 +66,21 @@ lk8s() {
     # list prompt source is
     # https://github.com/timo-reymann/bash-tui-toolkit/releases/download/1.9.0/prompts.bash
     source ~/.prompts.bash
-    options=($(ls /home/dlyle/.kube/config.* | awk -F/ '{print $5}' | cut -c 8-))
-    option=$(list "k8s" "${options[@]}")
+    local options=($(ls ${HOME}/.kube/config.* | awk -F/ '{print $5}' | cut -c 8-))
+    local option=$(list "k8s" "${options[@]}")
     k8s ${options[$option]}
     k8s ${options[$option]}
+}
+
+lssh() {
+    source ~/.prompts.bash
+    local options=($(awk -F\# '/^Host [A-Za-z1-9]/{split($1,a," "); print a[2]}' ${HOME}/.ssh/config))
+    local option=$(list "ssh" "${options[@]}")
+    echo ""
+    echo ""
+    echo "\$ ssh ${options[$option]}"
+    echo ""
+    ssh ${options[$option]}
 }
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
