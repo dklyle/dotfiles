@@ -62,6 +62,13 @@ k8s() {
     fi
 }
 
+_k8s_completions() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local options=$(ls /home/dlyle/.kube/config.* 2>/dev/null | xargs -n1 basename | sed 's/^config\.//')
+    COMPREPLY=($(compgen -W "${options}" -- "${cur}"))
+}
+complete -F _k8s_completions k8s
+
 lk8s() {
     # list prompt source is
     # https://github.com/timo-reymann/bash-tui-toolkit/releases/download/1.9.0/prompts.bash
@@ -181,7 +188,9 @@ set -o vi
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export PATH="$PATH:src/ghostty/zig-out/bin"
+export PATH="src/ghostty/zig-out/bin:$PATH"
+#export PATH="$HOME/src/zig/zig-x86_64-linux-0.14.1:$PATH" # ghostty build 1.2.*
+export PATH="$HOME/src/zig/zig-x86_64-linux-0.15.2:$PATH"  # ghostty build tip
 
 export WEBKIT_DISABLE_DMABUF_RENDERER=1
 
@@ -190,3 +199,11 @@ export WEBKIT_DISABLE_DMABUF_RENDERER=1
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 eval "$(atuin init bash)"
 eval "$(starship init bash)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# opencode
+export PATH=/home/dlyle/.opencode/bin:$PATH
+alias k="kubectl"
